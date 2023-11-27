@@ -17,12 +17,12 @@ function Register() {
 
     const RegisterUser = async (e) => {
         e.preventDefault();
-
+    
         if (formData.password !== formData.confirmPassword) {
             alert('Passwords do not match!');
             return;
         }
-
+    
         try {
             const response = await fetch('/api/register/', {
                 method: 'POST',
@@ -35,13 +35,24 @@ function Register() {
                     password: formData.password
                 })
             });
-
+    
             if (response.ok) {
                 alert('Account created successfully!');
                 navigate("/")
             } else {
                 const errorData = await response.json();
-                alert(`Registration failed: ${errorData.detail || 'Unknown error'}`);
+                if (errorData && errorData.errors) {
+                    const errors = errorData.errors;
+                    let errorMessage = '';
+                    for (const key in errors) {
+                        if (errors.hasOwnProperty(key)) {
+                            errorMessage += `${key}: ${errors[key].join(', ')}\n`;
+                        }
+                    }
+                    alert(`Registration failed:\n${errorMessage}`);
+                } else {
+                    alert(`Registration failed: ${errorData.detail || 'Unknown error'}`);
+                }
             }
         } catch (error) {
             console.error('Error during registration:', error);
