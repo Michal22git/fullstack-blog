@@ -38,7 +38,7 @@ function Register() {
     
             if (response.ok) {
                 alert('Account created successfully!');
-                navigate("/")
+                navigate("/login")
             } else {
                 const errorData = await response.json();
                 if (errorData && errorData.errors) {
@@ -65,28 +65,16 @@ function Register() {
           <h2>Register Account</h2>
           <form onSubmit={RegisterUser}>
             <div>
-              <label>
-                Username:
-                <input type="text" name="username" value={formData.username} onChange={handleInputChange} required />
-              </label>
+              <input type="text" name="username" placeholder="username" value={formData.username} onChange={handleInputChange} required />
             </div>
             <div>
-              <label>
-                Email:
-                <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
-              </label>
+              <input type="email" name="email" placeholder="email" value={formData.email} onChange={handleInputChange} required />
             </div>
             <div>
-              <label>
-                Password:
-                <input type="password" name="password" value={formData.password} onChange={handleInputChange} required />
-              </label>
+              <input type="password" name="password" placeholder="password" value={formData.password} onChange={handleInputChange} required />
             </div>
             <div>
-              <label>
-                Confirm Password:
-                <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleInputChange} required />
-              </label>
+              <input type="password" name="confirmPassword" placeholder="confirmPassword" value={formData.confirmPassword} onChange={handleInputChange} required />
             </div>
             <button type="submit">Register</button>
           </form>
