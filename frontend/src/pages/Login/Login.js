@@ -6,8 +6,8 @@ const Login = () => {
   let {loginUser} = useContext(AuthContext)
 
   return (
-    <div>
-        <h2>Login to your account!</h2>
+    <div className="login-form">
+        <h2>Login to your account</h2>
         <form onSubmit={loginUser}>
             <div>
                 <input type="text" name="username" placeholder="username" required />

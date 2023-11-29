@@ -61,7 +61,7 @@ function Register() {
     };
 
     return (
-        <div>
+        <div className="register-form">
           <h2>Register Account</h2>
           <form onSubmit={RegisterUser}>
             <div>
