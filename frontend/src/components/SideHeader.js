@@ -25,7 +25,7 @@ const SideHeader = () => {
         <SearchIcon /> Search
       </Nav.Item>
 
-      <Nav.Item as={Link} to="/profile">
+      <Nav.Item as={Link} to={(user ? `/profile/${user.username}` : `/login`)} state={(user ? { user: user.username } : { user: null })}>
         <MemberIcon /> Profile
       </Nav.Item>
 

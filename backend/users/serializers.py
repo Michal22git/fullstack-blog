@@ -3,6 +3,8 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from .models import Profile
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -37,3 +39,21 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'date_joined']
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    image = serializers.SerializerMethodField('get_image_url')
+
+    class Meta:
+        model = Profile
+        fields = ['user', 'description', 'image', 'followers_count', 'following_count']
+
+    def get_image_url(self, obj):
+        return self.context['request'].build_absolute_uri(obj.image.url)
