@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Profile, Follow
-from .serializers import UserRegisterSerializer, MyTokenObtainPairSerializer, ProfileSerializer
+from .serializers import UserRegisterSerializer, MyTokenObtainPairSerializer, ProfileSerializer, EditProfileSerializer, UpdatePictureSerializer
 
 
 class LoginView(TokenObtainPairView):
@@ -59,9 +59,9 @@ class FollowerView(generics.ListAPIView):
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
-        username = self.kwargs['user']  # Pobranie nazwy użytkownika z URL
-        user_profile = Profile.objects.get(user__username=username)  # Pobranie profilu użytkownika
-        followers = Follow.objects.filter(user=user_profile.user)  # Pobranie followersów dla użytkownika
+        username = self.kwargs['user']
+        user_profile = Profile.objects.get(user__username=username)
+        followers = Follow.objects.filter(user=user_profile.user)
         return [follower.follower.profile for follower in followers]
 
 
@@ -69,7 +69,44 @@ class FollowingView(generics.ListAPIView):
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
-        username = self.kwargs['user']  # Pobranie nazwy użytkownika z URL
-        user_profile = Profile.objects.get(user__username=username)  # Pobranie profilu użytkownika
-        following = Follow.objects.filter(follower=user_profile.user)  # Pobranie obserwowanych przez użytkownika
+        username = self.kwargs['user']
+        user_profile = Profile.objects.get(user__username=username)
+        following = Follow.objects.filter(follower=user_profile.user)
         return [followed.user.profile for followed in following]
+
+
+class UpdateProfileView(generics.UpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = EditProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.profile
+
+    def patch(self, request, *args, **kwargs):
+        serializer = self.get_serializer(self.get_object(), data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        user = self.request.user
+
+        new_username = request.data.get('username', None)
+        if new_username and new_username != user.username:
+            user.username = new_username
+            user.save()
+
+        new_email = request.data.get('email', None)
+        if new_email and new_email != user.email:
+            user.email = new_email
+            user.save()
+
+        serializer.save()
+        return Response(serializer.data)
+
+
+class UpdatePictureView(generics.UpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = UpdatePictureSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.profile

@@ -57,3 +57,33 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_image_url(self, obj):
         return self.context['request'].build_absolute_uri(obj.image.url)
+
+
+class EditProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField()
+    email = serializers.CharField()
+
+    class Meta:
+        model = Profile
+        fields = ['description', 'username', 'email']
+
+    def validate(self, data):
+        user = self.context['request'].user
+        username = data.get('username', user.username)
+        email = data.get('email', user.email)
+
+        username_exists = User.objects.exclude(pk=user.pk).filter(username=username).exists()
+        email_exists = User.objects.exclude(pk=user.pk).filter(email=email).exists()
+
+        if username_exists:
+            raise serializers.ValidationError("This username is already in use.")
+        if email_exists:
+            raise serializers.ValidationError("This email is already in use.")
+
+        return data
+
+
+class UpdatePictureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['image']

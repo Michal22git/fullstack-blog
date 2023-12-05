@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import AuthContext from '../../context/AuthContex';
 import FollowingButton from '../../components/Profile/FollowingBtn';
 import FollowersButton from '../../components/Profile/FollowersBtn';
+import EditProfileButton from '../../components/Profile/EditProfileBtn';
+import ProfileImage from '../../components/Profile/ProfileImage';
 
 const Profile = () => {
   const { authTokens, user } = useContext(AuthContext);
@@ -57,11 +59,15 @@ const Profile = () => {
     <div className="container">
       {userData ? (
         <div className="profile">
-          <img 
-            src={userData.image} 
-            alt="User Avatar" 
-            className="avatar" 
-          />
+          {isOwnProfile ? (
+            <ProfileImage imageUrl={userData.image} userData={userData} authTokens={authTokens} />
+          ) : (
+            <img
+              src={userData.image}
+              alt="User Avatar"
+              className="avatar"
+            />
+          )}
           <div className="info">
             <p className="username">{userData.user.username}</p>
             <p>{userData.user.email}</p>
@@ -74,7 +80,7 @@ const Profile = () => {
               {isOwnProfile && (
                 <>
                   <button className='action-btn'>Add Post</button>
-                  <button className='action-btn'>Edit Profile</button>
+                  <EditProfileButton userData={userData} authTokens={authTokens} />
                 </>
               )}
             </div>
@@ -85,7 +91,7 @@ const Profile = () => {
         <p>Loading...</p>
       )}
     </div>
-  );
+  )
 };
 
 export default Profile;
