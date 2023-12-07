@@ -5,6 +5,7 @@ import FollowingButton from '../../components/Profile/FollowingBtn';
 import FollowersButton from '../../components/Profile/FollowersBtn';
 import EditProfileButton from '../../components/Profile/EditProfileBtn';
 import ProfileImage from '../../components/Profile/ProfileImage';
+import FollowBtn from '../../components/Profile/FollowBtn';
 
 const Profile = () => {
   const { authTokens, user } = useContext(AuthContext);
@@ -76,7 +77,10 @@ const Profile = () => {
               <FollowingButton userData={userData} authTokens={authTokens} />
               <FollowersButton userData={userData} authTokens={authTokens} />
             </div>
-            <div className="buttons">  
+            <div className="buttons">
+              {!isOwnProfile && 
+                <FollowBtn userData={userData} authTokens={authTokens} />
+              }
               {isOwnProfile && (
                 <>
                   <button className='action-btn'>Add Post</button>
@@ -91,7 +95,7 @@ const Profile = () => {
         <p>Loading...</p>
       )}
     </div>
-  )
+  );
 };
 
 export default Profile;

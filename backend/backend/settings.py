@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'users.apps.UsersConfig',
+    'posts.apps.PostsConfig',
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',

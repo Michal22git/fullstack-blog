@@ -33,4 +33,4 @@ class Follow(models.Model):
     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
 
     def __str__(self):
-        return f"{self.user}'s follower"
+        return f"{self.follower} -> {self.user}"

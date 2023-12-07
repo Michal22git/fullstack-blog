@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .models import Profile
+from .models import Profile, Follow
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -50,13 +50,21 @@ class UserSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     image = serializers.SerializerMethodField('get_image_url')
+    followed = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ['user', 'description', 'image', 'followers_count', 'following_count']
+        fields = ['user', 'description', 'image', 'followers_count', 'following_count', 'followed']
 
     def get_image_url(self, obj):
         return self.context['request'].build_absolute_uri(obj.image.url)
+
+    def get_followed(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            user = request.user
+            return Follow.objects.filter(user=obj.user, follower=user).exists()
+        return False
 
 
 class EditProfileSerializer(serializers.ModelSerializer):

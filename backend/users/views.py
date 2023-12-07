@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -6,7 +7,8 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Profile, Follow
-from .serializers import UserRegisterSerializer, MyTokenObtainPairSerializer, ProfileSerializer, EditProfileSerializer, UpdatePictureSerializer
+from .serializers import UserRegisterSerializer, MyTokenObtainPairSerializer, \
+    ProfileSerializer, EditProfileSerializer, UpdatePictureSerializer
 
 
 class LoginView(TokenObtainPairView):
@@ -110,3 +112,41 @@ class UpdatePictureView(generics.UpdateAPIView):
 
     def get_object(self):
         return self.request.user.profile
+
+
+class FollowView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user):
+        user_to_follow = get_object_or_404(User, username=user)
+        current_user = self.request.user
+
+        if user_to_follow == current_user:
+            return Response({"error": "You selected yourself"}, status=status.HTTP_400_BAD_REQUEST)
+
+        is_following = Follow.objects.filter(user=user_to_follow, follower=current_user).exists()
+        if is_following:
+            return Response({"error": "You already follow this user"}, status=status.HTTP_400_BAD_REQUEST)
+
+        follow = Follow.objects.create(user=user_to_follow, follower=current_user)
+        follow.save()
+
+        return Response({"success": f"{user_to_follow.username} followed"}, status=status.HTTP_201_CREATED)
+
+
+class UnfollowView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, user):
+        user_to_unfollow = get_object_or_404(User, username=user)
+        current_user = self.request.user
+
+        if user_to_unfollow == current_user:
+            return Response({"error": "You selected yourself"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            follow_instance = Follow.objects.get(user=user_to_unfollow, follower=current_user)
+            follow_instance.delete()
+            return Response({"success": f"{user_to_unfollow.username} unfollowed"}, status=status.HTTP_200_OK)
+        except Follow.DoesNotExist:
+            return Response({"error": "You dont follow this user"}, status=status.HTTP_400_BAD_REQUEST)
