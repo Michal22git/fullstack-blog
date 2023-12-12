@@ -21,7 +21,7 @@ const SideHeader = () => {
         <HomeIcon /> Home
       </Nav.Item>
 
-      <Nav.Item as={Link} to="/">
+      <Nav.Item as={Link} to="/search">
         <SearchIcon /> Search
       </Nav.Item>
 

@@ -40,9 +40,9 @@ const FollowersButton = ({ userData, authTokens }) => {
           <div className="modal">
             <span className="close" onClick={closeModal}>&times;</span>
             <h2>Followers</h2>
-            <ul>
+            <ul className="search-results">
               {followersData.map(follower => (
-                <li key={follower.user.username} className="user-item">
+                <li key={follower.user.username} className="search-result-item">
                     <Link to={`/profile/${follower.user.username}`}>
                         <div className="user-info">
                             <img src={follower.image} alt="User Avatar" className="user-avatar" />

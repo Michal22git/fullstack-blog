@@ -150,3 +150,15 @@ class UnfollowView(generics.DestroyAPIView):
             return Response({"success": f"{user_to_unfollow.username} unfollowed"}, status=status.HTTP_200_OK)
         except Follow.DoesNotExist:
             return Response({"error": "You dont follow this user"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SearchView(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.kwargs.get('user')
+        if user:
+            return Profile.objects.filter(user__username__icontains=user)
+        else:
+            return Profile.objects.none()

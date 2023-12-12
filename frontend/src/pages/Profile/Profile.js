@@ -6,6 +6,7 @@ import FollowersButton from '../../components/Profile/FollowersBtn';
 import EditProfileButton from '../../components/Profile/EditProfileBtn';
 import ProfileImage from '../../components/Profile/ProfileImage';
 import FollowBtn from '../../components/Profile/FollowBtn';
+import Posts from '../../components/Profile/Posts';
 
 const Profile = () => {
   const { authTokens, user } = useContext(AuthContext);
@@ -59,38 +60,41 @@ const Profile = () => {
   return (
     <div className="container">
       {userData ? (
-        <div className="profile">
-          {isOwnProfile ? (
-            <ProfileImage imageUrl={userData.image} userData={userData} authTokens={authTokens} />
-          ) : (
-            <img
-              src={userData.image}
-              alt="User Avatar"
-              className="avatar"
-            />
-          )}
-          <div className="info">
-            <p className="username">{userData.user.username}</p>
-            <p>{userData.user.email}</p>
-            <p>{userData.description}</p>
-            <div className="buttons">
-              <FollowingButton userData={userData} authTokens={authTokens} />
-              <FollowersButton userData={userData} authTokens={authTokens} />
+        <>
+          <div className="profile">
+            {isOwnProfile ? (
+              <ProfileImage imageUrl={userData.image} userData={userData} authTokens={authTokens} />
+            ) : (
+              <img
+                src={userData.image}
+                alt="User Avatar"
+                className="avatar"
+              />
+            )}
+            <div className="info">
+              <p className="username">{userData.user.username}</p>
+              <p>{userData.user.email}</p>
+              <p>{userData.description}</p>
+              <div className="buttons">
+                <FollowingButton userData={userData} authTokens={authTokens} />
+                <FollowersButton userData={userData} authTokens={authTokens} />
+              </div>
+              <div className="buttons">
+                {!isOwnProfile && 
+                  <FollowBtn userData={userData} authTokens={authTokens} />
+                }
+                {isOwnProfile && (
+                  <>
+                    <button className='action-btn'>Add Post</button>
+                    <EditProfileButton userData={userData} authTokens={authTokens} />
+                  </>
+                )}
+              </div>
+              <p>{memberSince}</p>
             </div>
-            <div className="buttons">
-              {!isOwnProfile && 
-                <FollowBtn userData={userData} authTokens={authTokens} />
-              }
-              {isOwnProfile && (
-                <>
-                  <button className='action-btn'>Add Post</button>
-                  <EditProfileButton userData={userData} authTokens={authTokens} />
-                </>
-              )}
-            </div>
-            <p>{memberSince}</p>
           </div>
-        </div>
+          <Posts userData={userData} authTokens={authTokens}/>
+        </>  
       ) : (
         <p>Loading...</p>
       )}
