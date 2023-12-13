@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import LikeBtn from './LikeBtn';
+import LikeBtn from '../Post/LikeBtn';
+import Comments from '../Post/Comments';
 
 const Posts = ({ authTokens }) => {
   const [userPosts, setUserPosts] = useState([]);
@@ -82,20 +83,8 @@ const Posts = ({ authTokens }) => {
                 <p>{selectedPost.description}</p>
                 <i>{new Date(selectedPost.created_time).toLocaleString()}</i>
               </div>
-              <div className="comments-section">
-                {selectedPost.comments.map(comment => (
-                  <div key={comment.id} className="comment">
-                    <div className='author-info'>
-                      <img src={comment.profile.image} alt="Author Avatar" />
-                      <Link to={`/profile/${comment.profile.user.username}`}>
-                        <p>{comment.profile.user.username}</p>
-                      </Link>  
-                    </div>
-                    <p>{comment.content}</p>
-                    <i>{new Date(comment.created_time).toLocaleString()}</i>
-                  </div>
-                ))}
-              </div>
+              <Comments selectedPost={selectedPost} authTokens={authTokens} />
+            
             </div>
             <span className="close" onClick={closeModal}>&times;</span>
           </div>

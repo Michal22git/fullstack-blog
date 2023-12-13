@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Post, Like, Comment
-from .serializers import PostSerializer, LikeSerializer
+from .serializers import PostSerializer, LikeSerializer, AddCommentSerializer
 
 
 class UserPostsView(generics.ListAPIView):
@@ -45,3 +45,19 @@ class UnlikePostView(generics.DestroyAPIView):
             return Response({"message": "Post unliked"}, status=status.HTTP_200_OK)
         except Like.DoesNotExist:
             return Response({"message": "Not liked yet"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CommentPostView(generics.CreateAPIView):
+    serializer_class = AddCommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        post_pk = self.kwargs.get('pk')
+        post = get_object_or_404(Post, pk=post_pk)
+        serializer.save(user=self.request.user, post=post)
+
+
+class PostsView(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]

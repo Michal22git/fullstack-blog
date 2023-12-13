@@ -34,7 +34,7 @@ const LikeBtn = ({ postData, authTokens }) => {
         backgroundColor: liked ? 'green' : 'red',
         color: 'white',
         border: '1px solid black',
-        padding: '10px',
+        padding: '5px 15px',
         cursor: 'pointer',
         borderRadius: '5px'
       }}

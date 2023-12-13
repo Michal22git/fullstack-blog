@@ -44,3 +44,9 @@ class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = '__all__'
+
+
+class AddCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        exclude = ['user', 'post']
