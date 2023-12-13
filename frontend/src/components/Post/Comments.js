@@ -33,7 +33,7 @@ const Comments = ({ selectedPost, authTokens }) => {
     <>
       <div className="add-comment">
           <textarea value={newComment} onChange={handleCommentChange} placeholder="Add comment..." />
-          <button onClick={addComment}>Dodaj</button>
+          <button onClick={addComment}>Submit</button>
       </div>
       <div className="comments-section">
           {selectedPost.comments.map(comment => (

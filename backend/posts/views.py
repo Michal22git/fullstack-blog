@@ -6,7 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Post, Like, Comment
-from .serializers import PostSerializer, LikeSerializer, AddCommentSerializer
+from .serializers import PostSerializer, LikeSerializer, AddCommentSerializer, \
+    PostCreateSerializer
 
 
 class UserPostsView(generics.ListAPIView):
@@ -61,3 +62,11 @@ class PostsView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
+
+
+class PostsCreateView(generics.CreateAPIView):
+    serializer_class = PostCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

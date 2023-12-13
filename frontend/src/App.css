@@ -409,7 +409,7 @@ body {
 .home-post {
   display: flex;
   width: 100%;
-  max-height: 700px;
+  max-height: 600px;
   margin: 50px 0;
   background-color: white;
   border-radius: 5px;

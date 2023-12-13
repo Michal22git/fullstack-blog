@@ -7,6 +7,7 @@ import EditProfileButton from '../../components/Profile/EditProfileBtn';
 import ProfileImage from '../../components/Profile/ProfileImage';
 import FollowBtn from '../../components/Profile/FollowBtn';
 import Posts from '../../components/Profile/Posts';
+import AddPostBtn from '../../components/Profile/AddPostBtn';
 
 const Profile = () => {
   const { authTokens, user } = useContext(AuthContext);
@@ -85,7 +86,7 @@ const Profile = () => {
                 }
                 {isOwnProfile && (
                   <>
-                    <button className='action-btn'>Add Post</button>
+                    <AddPostBtn authTokens={authTokens} />
                     <EditProfileButton userData={userData} authTokens={authTokens} />
                   </>
                 )}

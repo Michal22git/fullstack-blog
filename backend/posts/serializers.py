@@ -50,3 +50,10 @@ class AddCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         exclude = ['user', 'post']
+
+
+class PostCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['description', 'image', 'user', 'created_time']
+        read_only_fields = ['user', 'created_time']
