@@ -1,7 +1,9 @@
-from django.test import TestCase
-from django.contrib.auth.models import User
-from posts.models import Post, Like, Comment
 from datetime import datetime
+
+from django.contrib.auth.models import User
+from django.test import TestCase
+
+from posts.models import Post, Like, Comment
 
 
 class PostModelTest(TestCase):
@@ -18,7 +20,6 @@ class PostModelTest(TestCase):
         posts = Post.objects.all()
         self.assertEqual(posts[0].created_time, post_2.created_time)
         self.assertEqual(posts[1].created_time, self.test_post.created_time)
-
 
 
 class LikeModelTest(TestCase):

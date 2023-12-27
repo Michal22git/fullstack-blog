@@ -1,5 +1,7 @@
-from django.test import TestCase
+from PIL import Image
 from django.contrib.auth.models import User
+from django.test import TestCase
+
 from users.models import Profile, Follow
 
 
@@ -18,7 +20,6 @@ class ProfileModelTest(TestCase):
 
         profile.save()
 
-        from PIL import Image
         img = Image.open(img_path)
         self.assertTrue(img.height <= 300 and img.width <= 300)
 
