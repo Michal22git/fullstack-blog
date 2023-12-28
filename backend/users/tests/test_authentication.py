@@ -1,5 +1,5 @@
-from django.test import TestCase
 from django.contrib.auth.models import User
+from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -52,4 +52,5 @@ class TestAPIAuthentication(TestCase):
             data={},
             format='json'
         )
+
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
