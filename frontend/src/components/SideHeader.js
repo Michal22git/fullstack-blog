@@ -7,6 +7,7 @@ import SearchIcon from '@rsuite/icons/Search';
 import ExitIcon from '@rsuite/icons/Exit';
 import UserPlusIcon from '@rsuite/icons/legacy/UserPlus';
 import SignInIcon from '@rsuite/icons/legacy/SignIn';
+import MessageIcon from '@rsuite/icons/Message';
 import AuthContext from '../context/AuthContex';
 
 
@@ -23,6 +24,10 @@ const SideHeader = () => {
 
       <Nav.Item as={Link} to="/search">
         <SearchIcon /> Search
+      </Nav.Item>
+
+      <Nav.Item as={Link} to="/chat">
+        <MessageIcon /> Chat
       </Nav.Item>
 
       <Nav.Item as={Link} to={(user ? `/profile/${user.username}` : `/login`)} state={(user ? { user: user.username } : { user: null })}>

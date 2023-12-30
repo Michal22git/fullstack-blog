@@ -4,10 +4,15 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Post, Like, Comment
 from .serializers import PostSerializer, LikeSerializer, AddCommentSerializer, \
     PostCreateSerializer
+
+
+class CustomPostsPagination(PageNumberPagination):
+    page_size = 5
 
 
 class UserPostsView(generics.ListAPIView):
@@ -62,6 +67,7 @@ class PostsView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = CustomPostsPagination
 
 
 class PostsCreateView(generics.CreateAPIView):

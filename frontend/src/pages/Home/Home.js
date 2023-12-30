@@ -8,19 +8,27 @@ function Home() {
   const { authTokens } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMorePages, setHasMorePages] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/posts/', {
+        const response = await fetch(`http://127.0.0.1:8000/api/posts/?page=${page}`, {
           headers: {
             Authorization: `Bearer ${authTokens.access}`
           }
         });
         if (response.ok) {
           const data = await response.json();
-          setPosts(data);
+          setPosts(data.results);
           setLoading(false);
+
+          if (data.next !== null) {
+            setHasMorePages(true);
+          } else {
+            setHasMorePages(false);
+          }
         } else {
           console.error('error');
           setLoading(false);
@@ -32,7 +40,11 @@ function Home() {
     };
 
     fetchPosts();
-  }, [authTokens]);
+  }, [authTokens, page]);
+
+  const changePage = (newPage) => {
+    setPage(newPage);
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -64,9 +76,22 @@ function Home() {
             <Comments selectedPost={post} authTokens={authTokens} />
           </div>
         </div>
-
       ))}
-
+      <div className="pagination">
+        <button
+          onClick={() => changePage(page - 1)}
+          disabled={page === 1}
+        >
+          Previous
+        </button>
+        <span>{page}</span>
+        <button
+          onClick={() => changePage(page + 1)}
+          disabled={!hasMorePages}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }
